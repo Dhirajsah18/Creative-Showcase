@@ -66,10 +66,10 @@ npm run dev
 ## 📸 Screenshots
 
 ### Landing Page
-
+![alt text](Landing-page.jpeg)
 
 ### Dashboard
-
+![alt text](Dashboard.jpeg)
 
 ---
 
@@ -98,22 +98,6 @@ Creative_Showcase/
 
 ---
 
-## 🔄 API Endpoints
-
-### Images (Public)
-- `GET /images/random` - Get random images
-- `GET /images/user/:username` - Get user images
-
-### Images (Authenticated)
-- `GET /images/my` - Get your images
-- `POST /images/upload` - Upload image
-- `DELETE /images/:id` - Delete image
-
-### Authentication
-- `POST /auth/signup` - Register user
-- `POST /auth/login` - Login user
-
----
 
 ### Author
 
