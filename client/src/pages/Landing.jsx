@@ -73,7 +73,7 @@ useEffect(() => {
                 loading="lazy"
               />
 
-              {/* 👇 USER PROFILE LINK */}
+              {/* USER PROFILE LINK */}
               {img.username && (
                 <Link
                   to={`/profile/${img.username}`}

@@ -7,6 +7,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  // Handle login
+  
   const login = (e) => {
     e.preventDefault();
     api.post("/auth/login", { email, password })

@@ -4,10 +4,12 @@ import path from "path";
 
 const uploadDir = path.join(process.cwd(), "uploads");
 
+// Ensure upload directory exists
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
+// Configure multer storage
 const storage = multer.diskStorage({
   destination: (_, __, cb) => cb(null, uploadDir),
   filename: (_, file, cb) => {

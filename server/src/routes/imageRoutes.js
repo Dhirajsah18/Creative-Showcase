@@ -11,12 +11,12 @@ import {
 
 const router = express.Router();
 
-router.get("/random", getRandomImages);
-router.get("/user/:username", getImagesByUsername);
-router.get("/my", auth, getMyImages);
-router.post("/", auth, upload.single("image"), uploadImage);
-// Alias to support clients posting to /images/upload
+router.get("/random", getRandomImages); // GET RANDOM IMAGES
+router.get("/user/:username", getImagesByUsername); // GET IMAGES BY USERNAME
+router.get("/my", auth, getMyImages); // GET MY IMAGES (authenticated user's gallery)
+// UPLOAD IMAGE
 router.post("/upload", auth, upload.single("image"), uploadImage);
+// DELETE IMAGE
 router.delete("/:id", auth, deleteImage);
 
 export default router;

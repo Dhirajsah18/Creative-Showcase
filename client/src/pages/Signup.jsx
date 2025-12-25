@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../utils/api";
 import { useNavigate, Link } from "react-router-dom";
 
+// Signup 
 export default function Signup() {
   const [form, setForm] = useState({
     username: "",

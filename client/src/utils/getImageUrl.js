@@ -1,12 +1,19 @@
 export const getImageUrl = (imagePath) => {
+  // If no image path is provided
   if (!imagePath) return "";
 
-  // If already absolute, return as-is
-  if (/^https?:\/\//i.test(imagePath)) return imagePath;
+  // If image path is already a full URL
+  if (imagePath.startsWith("http")) {
+    return imagePath;
+  }
 
-  const base = (import.meta.env.VITE_API_BASE_URL || "")
-    .replace(/\/+$/, ""); // trim trailing slashes
+  // Get backend base URL from env
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || "";
 
-  const path = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
-  return `${base}${path}`;
+  // Ensure image path starts with /
+  const formattedPath = imagePath.startsWith("/")
+    ? imagePath
+    : `/${imagePath}`;
+
+  return `${baseUrl}${formattedPath}`;
 };

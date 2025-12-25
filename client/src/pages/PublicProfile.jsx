@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import api from "../utils/api";
 import { getImageUrl } from "../utils/getImageUrl";
 
+// Public Profile Page
 export default function UserPublicProfile() {
   const { username } = useParams();
   const [user, setUser] = useState(null);

@@ -15,6 +15,8 @@ export default function Dashboard() {
     loadImages();
   }, []);
 
+
+  // Load user's images
   async function loadImages() {
     try {
       const res = await api.get("/images/my");
@@ -26,6 +28,7 @@ export default function Dashboard() {
     }
   }
 
+  // Upload image
   async function handleUpload() {
     if (!file || uploading) return;
 
@@ -44,6 +47,7 @@ export default function Dashboard() {
     }
   }
 
+// Delete image
   async function handleDelete(id) {
     if (!confirm("Delete this image?")) return;
 
@@ -55,6 +59,7 @@ export default function Dashboard() {
     }
   }
 
+  // Logout
   function handleLogout() {
     localStorage.removeItem("token");
     navigate("/login");

@@ -4,7 +4,6 @@ import fs from "fs";
 import path from "path";
 
 // GET RANDOM IMAGES
-
 export const getRandomImages = async (req, res) => {
   try {
     const limit = Number(req.query.limit) || 9;
@@ -12,18 +11,21 @@ export const getRandomImages = async (req, res) => {
     res.json(images);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to load images" });
+    res
+    .status(500)
+    .json({ message: "Failed to load images" });
   }
 };
 
 
   //GET IMAGES BY USERNAME
-
 export const getImagesByUsername = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+      .status(404)
+      .json({ message: "User not found" });
     }
 
     const images = await Image.find({ user: user._id })
@@ -32,7 +34,9 @@ export const getImagesByUsername = async (req, res) => {
     res.json(images);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to fetch user images" });
+    res
+    .status(500)
+    .json({ message: "Failed to fetch user images" });
   }
 };
 
@@ -41,7 +45,9 @@ export const getImagesByUsername = async (req, res) => {
 export const getMyImages = async (req, res) => {
   try {
     if (!req.userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res
+      .status(401)
+      .json({ message: "Unauthorized user" });
     }
 
     const images = await Image.find({ user: req.userId })
@@ -50,27 +56,34 @@ export const getMyImages = async (req, res) => {
     res.json(images);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to load your images" });
+    res
+    .status(500)
+    .json({ message: "Failed to load your images" });
   }
 };
 
 
 //   UPLOAD IMAGE
-
 export const uploadImage = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "No image uploaded" });
+      return res
+      .status(400)
+      .json({ message: "No image uploaded" });
     }
 
     if (!req.userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res
+      .status(401)
+      .json({ message: "Unauthorized" });
     }
 
-    // Ensure required username field is populated
+    // Get username of the authenticated user
     const user = await User.findById(req.userId).select("username");
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+      .status(404)
+      .json({ message: "User not found" });
     }
 
     const image = await Image.create({
@@ -79,25 +92,31 @@ export const uploadImage = async (req, res) => {
       imageUrl: `/uploads/${req.file.filename}`
     });
 
-    res.status(201).json(image);
+    res.status(201)
+    .json(image);
+
   } catch (err) {
     console.error("Upload error:", err);
-    res.status(500).json({ message: "Upload failed" });
+    res
+    .status(500)
+    .json({ message: "Upload failed" });
   }
 };
 
-
 //   DELETE IMAGE
-
 export const deleteImage = async (req, res) => {
   try {
     const image = await Image.findById(req.params.id);
     if (!image) {
-      return res.status(404).json({ message: "Image not found" });
+      return res
+      .status(404)
+      .json({ message: "Image not found" });
     }
 
     if (image.user.toString() !== req.userId) {
-      return res.status(403).json({ message: "Not authorized" });
+      return res
+      .status(403)
+      .json({ message: "Not authorized" });
     }
 
     const filePath = path.join(
@@ -114,6 +133,8 @@ export const deleteImage = async (req, res) => {
     res.json({ message: "Image deleted" });
   } catch (err) {
     console.error("Delete error:", err);
-    res.status(500).json({ message: "Delete failed" });
+    res
+    .status(500)
+    .json({ message: "Delete failed" });
   }
 };
