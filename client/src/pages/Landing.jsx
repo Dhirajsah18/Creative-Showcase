@@ -20,7 +20,7 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-100 to-indigo-200">
       {/* Navbar */}
-      <header className="backdrop-blur-sm bg-indigo-50 border-b border-slate-800 sticky top-0 z-50">
+      <header className="backdrop-blur-sm bg-indigo-50 border-b border-slate-300 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
           <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
             Creative Showcase
@@ -64,7 +64,7 @@ useEffect(() => {
           {images.map(img => (
             <div
               key={img._id}
-              className="mb-4 group overflow-hidden rounded-2xl bg-white shadow-md relative"
+              className="mb-4 relative group overflow-hidden rounded-2xl bg-white border border-indigo-200 shadow-md hover:shadow-2xl hover:shadow-indigo-300 transition-all duration-300"
             >
               <img
                 src={getImageUrl(img.imageUrl)}
