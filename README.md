@@ -66,10 +66,12 @@ npm run dev
 ## 📸 Screenshots
 
 ### Landing Page
-![alt text](Landing-page.jpeg)
+![Landing-page](https://github.com/user-attachments/assets/6b540717-d58d-4d2b-abda-09d86b12c848)
+
 
 ### Dashboard
-![alt text](Dashboard.jpeg)
+![Dashboard](https://github.com/user-attachments/assets/e59e9552-a651-4acf-8e0a-bbbb0a813dca)
+
 
 ---
 
@@ -101,7 +103,7 @@ Creative_Showcase/
 
 ### Author
 
-Dhiraj Sah
+Dhiraj Kumar Sah
 
 ---
 
