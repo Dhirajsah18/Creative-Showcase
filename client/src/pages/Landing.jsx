@@ -54,7 +54,7 @@ useEffect(() => {
           Discover Amazing <span className="bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Creativity</span>
         </h2>
         <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
-          Explore stunning visual content from creative minds around the world
+          Explore stunning visual content around the world
         </p>
       </section>
 
