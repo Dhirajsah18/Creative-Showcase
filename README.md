@@ -45,23 +45,6 @@ It supports **public user profiles**, **random image discovery**, and a **person
 - Database: MongoDB Atlas
 
 ---
-## Run Locally
-
-### Backend
-```bash
-cd server
-npm install
-npm run dev
-```
-
-### Frontend
-```bash
-cd client
-npm install
-npm run dev
-```
-
----
 
 ## 📸 Screenshots
 
@@ -72,6 +55,24 @@ npm run dev
 ### Dashboard
 ![Dashboard](https://github.com/user-attachments/assets/e59e9552-a651-4acf-8e0a-bbbb0a813dca)
 
+
+---
+
+### PREREQUISITES
+
+Before running this project locally, ensure the following software is installed
+on your system:
+
+- Node.js (version 18 or later recommended)
+- npm (comes with Node.js)
+- MongoDB (local installation or MongoDB Atlas)
+- Git
+
+You can verify installation using:
+
+node -v
+npm -v
+git --version
 
 ---
 
@@ -99,6 +100,70 @@ Creative_Showcase/
 ```
 
 ---
+
+### BACKEND INSTALLATION & EXECUTION
+
+1. Clone the repository
+
+git clone https://github.com/your-username/creative-showcase.git
+cd creative-showcase/server
+
+2. Install backend dependencies
+
+npm install
+
+3. Configure environment variables
+
+Create a file named .env inside the server folder and add:
+
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+PORT=8000
+
+Note:
+- Do not commit the .env file to GitHub.
+- MongoDB Atlas connection strings are recommended.
+
+4. Create uploads directory (required)
+
+mkdir uploads
+
+This folder is used to store uploaded images locally.
+
+5. Start the backend server
+
+npm run dev
+
+If successful, the backend will run at:
+
+http://localhost:8000
+
+
+### FRONTEND INSTALLATION & EXECUTION
+
+6. Open a new terminal and navigate to frontend
+
+cd ../client
+
+7. Install frontend dependencies
+
+npm install
+
+8. Configure frontend environment variables
+
+Create a file named .env inside the client folder and add:
+
+VITE_API_BASE_URL=http://localhost:5000
+
+This connects the frontend to the backend API.
+
+9. Start the frontend development server
+
+npm run dev
+
+If successful, the frontend will run at:
+
+http://localhost:5173
 
 
 ### Author
