@@ -49,7 +49,8 @@ It supports **public user profiles**, **random image discovery**, and a **person
 ## 📸 Screenshots
 
 ### Landing Page
-![Landing-page](https://github.com/user-attachments/assets/6b540717-d58d-4d2b-abda-09d86b12c848)
+![Landing_page](https://github.com/user-attachments/assets/cc44b8d8-5a68-4211-b130-a12ca59160af)
+
 
 
 ### Dashboard
