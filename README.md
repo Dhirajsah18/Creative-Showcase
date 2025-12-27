@@ -169,7 +169,7 @@ If successful, the frontend will run at:
 
 http://localhost:5173
 
-===
+---
 
 ### Author
 
