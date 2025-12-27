@@ -8,8 +8,11 @@ export default function Dashboard() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
     loadImages();
@@ -97,28 +100,42 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-100 to-indigo-200">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-200 to-indigo-300">
 
-      <header className="backdrop-blur-sm bg-indigo-50 border-b border-slate-300 sticky top-0 z-50">
+      {/* Navbar */}
+      <header className="backdrop-blur-sm border-b border-slate-300 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-          <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-            My Dashboard
-          </h1>
+
+          <div>
+            <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+              My Dashboard
+            </h1>
+          </div>
+
           <button
             onClick={handleLogout}
-            className="px-5 py-2 rounded-lg border border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition">
+            className="px-5 py-2 rounded-lg border border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition"
+          >
             Logout
           </button>
         </div>
       </header>
 
+      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-10">
 
-        <div className="bg-white rounded-2xl shadow-xl border p-8 mb-12">
+        <div className="w-full text-center mt-1 mb-2">
+          <p className="text-slate-900 text-lg">
+            Welcome, <span className="font-bold text-slate-900">@{username}</span>
+          </p>
+        </div>
+
+        {/* Upload Section */}
+        <div className="bg-indigo-100 rounded-2xl shadow-xl border p-8 mb-12">
           <h2 className="text-2xl font-semibold mb-6">Upload Image</h2>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            
+          <div className=" flex flex-col sm:flex-row items-center gap-4">
+
             <input
               ref={fileInputRef}
               type="file"
@@ -166,6 +183,16 @@ export default function Dashboard() {
         </div>
 
         {/* Gallery */}
+
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">
+            My Gallery
+            <span className="text-slate-500 font-normal text-lg ml-2">
+              ({images.length})
+            </span>
+          </h2>
+        </div>
+
         {loading ? (
           <p className="text-center text-slate-600">Loading...</p>
         ) : images.length === 0 ? (

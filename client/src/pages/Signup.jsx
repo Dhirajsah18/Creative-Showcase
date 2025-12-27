@@ -26,7 +26,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue100 to-indigo-200 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-200 to-indigo-300 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">

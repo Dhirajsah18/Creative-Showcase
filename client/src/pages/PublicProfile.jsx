@@ -27,10 +27,10 @@ export default function UserPublicProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-100 to-indigo-200">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-200 to-indigo-300">
       <div className="max-w-7xl mx-auto px-6 py-12">
 
-        {/* Profile Header */}
+        {/* Header */}
         <div className="flex items-center gap-6 mb-12">
           <div className="w-20 h-20 rounded-full bg-indigo-600 text-white flex items-center justify-center text-3xl font-bold">
             {username[0].toUpperCase()}
@@ -59,7 +59,7 @@ export default function UserPublicProfile() {
                 className="mb-4 break-inside-avoid bg-white rounded-xl shadow-md overflow-hidden"
               >
                 <img
-                  src={img.imageUrl}   // ✅ Cloudinary URL
+                  src={img.imageUrl}   // Cloudinary URL
                   alt="user upload"
                   className="w-full hover:scale-105 transition-transform duration-300"
                   loading="lazy"

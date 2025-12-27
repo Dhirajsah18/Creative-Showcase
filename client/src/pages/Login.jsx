@@ -14,6 +14,7 @@ export default function Login() {
     api.post("/auth/login", { email, password })
       .then(res => {
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("username", res.data.username); 
         navigate("/dashboard");
       })
       .catch((error) => {
@@ -23,7 +24,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-1000 to-indigo-200 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-200 to-indigo-300 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">

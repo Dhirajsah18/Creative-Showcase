@@ -6,7 +6,7 @@ import cloudinary from "../config/cloudinary.js";
 
 export const getRandomImages = async (req, res) => {
   try {
-    const limit = Number(req.query.limit) || 9;
+    const limit = Number(req.query.limit) || 8;
 
     const images = await Image.aggregate([
       { $sample: { size: limit } }
