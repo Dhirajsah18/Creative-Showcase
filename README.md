@@ -50,11 +50,11 @@ It supports **public user profiles**, **random image discovery**, and a **person
 ## 📸 Screenshots
 
 ### Landing Page
-![Landing_page](https://github.com/user-attachments/assets/480798fb-a63a-4174-b0fe-5dba2ee72948)
+![Landing_page](https://github.com/user-attachments/assets/a92a85fe-173d-4cd3-95e4-f5f4c360606e)
 
 
 ### Dashboard
-![Dashboard](https://github.com/user-attachments/assets/e59e9552-a651-4acf-8e0a-bbbb0a813dca)
+![Dashboard](https://github.com/user-attachments/assets/ba3d4ae8-3ecf-445c-83d7-b1fcc9e03278)
 
 ---
 
@@ -168,7 +168,7 @@ If successful, the frontend will run at:
 
 http://localhost:5173
 
-===
+---
 
 ### Author
 
