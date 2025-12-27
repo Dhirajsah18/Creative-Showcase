@@ -15,8 +15,14 @@ export default function Signup() {
   const submit = (e) => {
     e.preventDefault();
     api.post("/auth/register", form)
-      .then(() => navigate("/login"))
-      .catch(() => alert("Signup failed"));
+      .then(() => {
+        alert("Account created successfully! Please login.");
+        navigate("/login");
+      })
+      .catch((error) => {
+        const message = error.response?.data?.message || "Signup failed";
+        alert(message);
+      });
   };
 
   return (

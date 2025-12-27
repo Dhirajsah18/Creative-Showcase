@@ -7,21 +7,17 @@ const imageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    username: {
-      type: String,
-      required: true,
-      index: true,
-    },
     imageUrl: {
       type: String,
       required: true,
     },
-    title: {
+    publicId: {
       type: String,
-      trim: true,
+      required: true,
     },
   },
   { timestamps: true }
 );
+
 
 export default mongoose.model("Image", imageSchema);

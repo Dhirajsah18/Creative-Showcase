@@ -17,9 +17,9 @@ It supports **public user profiles**, **random image discovery**, and a **person
 ### 🔐 Authenticated Features
 - User authentication (Signup / Login)
 - Personal dashboard
-- Upload images
+- Upload images to Cloudinary
 - Delete uploaded images
-- View image dimensions
+- Image preview before upload
 - Secure JWT-based access
 
 ---
@@ -37,12 +37,13 @@ It supports **public user profiles**, **random image discovery**, and a **person
 - Express.js
 - MongoDB (Mongoose)
 - JWT Authentication
-- Multer (Image Upload)
+- Cloudinary (Image Storage & CDN)
 
 ### Deployment
 - Frontend: Vercel
 - Backend: Render
 - Database: MongoDB Atlas
+- Image Storage: Cloudinary
 
 ---
 
@@ -67,6 +68,7 @@ on your system:
 - npm (comes with Node.js)
 - MongoDB (local installation or MongoDB Atlas)
 - Git
+- Cloudinary account
 
 You can verify installation using:
 
@@ -86,8 +88,9 @@ Creative_Showcase/
 │   │   ├── models/
 │   │   ├── routes/
 │   │   ├── middlewares/
+│   │   ├── config/
+│   │   │   └── cloudinary.js
 │   │   └── index.js
-│   ├── uploads/
 │   └── package.json
 ├── client/
 │   ├── src/
@@ -97,6 +100,7 @@ Creative_Showcase/
 │   │   └── main.jsx
 │   └── package.json
 └── README.md
+
 ```
 
 ---
@@ -118,38 +122,37 @@ Create a file named .env inside the server folder and add:
 
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-PORT=8000
+PORT=5000
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 
 Note:
 - Do not commit the .env file to GitHub.
-- MongoDB Atlas connection strings are recommended.
+- Use MongoDB Atlas for production
+- Cloudinary is used for image uploads (no local storage)
 
-4. Create uploads directory (required)
-
-mkdir uploads
-
-This folder is used to store uploaded images locally.
-
-5. Start the backend server
+4. Start the backend server
 
 npm run dev
 
 If successful, the backend will run at:
 
-http://localhost:8000
+http://localhost:5000
 
 
 ### FRONTEND INSTALLATION & EXECUTION
 
-6. Open a new terminal and navigate to frontend
+5. Open a new terminal and navigate to frontend
 
 cd ../client
 
-7. Install frontend dependencies
+6. Install frontend dependencies
 
 npm install
 
-8. Configure frontend environment variables
+7. Configure frontend environment variables
 
 Create a file named .env inside the client folder and add:
 
@@ -157,7 +160,7 @@ VITE_API_BASE_URL=http://localhost:5000
 
 This connects the frontend to the backend API.
 
-9. Start the frontend development server
+8. Start the frontend development server
 
 npm run dev
 

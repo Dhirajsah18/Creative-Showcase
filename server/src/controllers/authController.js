@@ -14,8 +14,10 @@ export const register = async (req, res) => {
       .json({ message: "All fields are required" });
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     const existingUser = await User.findOne({
-      $or: [{ email }, { username }],
+      $or: [{ email: normalizedEmail }, { username }],
     });
 
     if (existingUser) {
@@ -28,7 +30,7 @@ export const register = async (req, res) => {
 
     await User.create({
       username,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
     });
 
@@ -55,7 +57,8 @@ export const login = async (req, res) => {
       .json({ message: "Email and password required" });
     }
 
-    const user = await User.findOne({ email });
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
       return res
       .status(400)
@@ -67,6 +70,12 @@ export const login = async (req, res) => {
       return res
       .status(400)
       .json({ message: "Invalid credentials" });
+    }
+
+    if (!process.env.JWT_SECRET) {
+      return res
+      .status(500)
+      .json({ message: "Server error: missing JWT secret" });
     }
 
     const token = jwt.sign(

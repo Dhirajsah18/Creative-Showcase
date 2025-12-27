@@ -1,23 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import api from "../utils/api.js";
 import { useNavigate } from "react-router-dom";
-import { getImageUrl } from "../utils/getImageUrl.js";
 
 export default function Dashboard() {
   const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [imageDims, setImageDims] = useState({});
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     loadImages();
   }, []);
 
+  // Convert file → base64
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
 
-  // Load user's images
-  async function loadImages() {
+  // Load images
+  const loadImages = async () => {
     try {
       const res = await api.get("/images/my");
       setImages(res.data);
@@ -26,44 +34,67 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  // Handle file selection
+  const handleFileSelect = (file) => {
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Only image files are allowed");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Image too large (max 10MB)");
+      return;
+    }
+
+    setFile(file);
+    setPreview(URL.createObjectURL(file));
+  };
 
   // Upload image
-  async function handleUpload() {
+  const handleUpload = async () => {
     if (!file || uploading) return;
-
-    const formData = new FormData();
-    formData.append("image", file);
 
     try {
       setUploading(true);
-      await api.post("/images/upload", formData);
-      await loadImages();
+      const base64 = await toBase64(file);
+
+      await api.post("/images/upload", {
+        image: base64,
+        mime: file.type,
+      });
+
       setFile(null);
+      setPreview(null);
+      await loadImages();
     } catch (err) {
-      alert("Upload failed");
+      console.error(err);
+      alert(err.response?.data?.message || "Upload failed");
     } finally {
       setUploading(false);
     }
-  }
+  };
 
-// Delete image
-  async function handleDelete(id) {
+  // Delete image
+  const handleDelete = async (id) => {
     if (!confirm("Delete this image?")) return;
 
     try {
       await api.delete(`/images/${id}`);
-      setImages(images.filter(img => img._id !== id));
-    } catch (err) {
+      setImages((prev) => prev.filter((img) => img._id !== id));
+    } catch {
       alert("Delete failed");
     }
-  }
+  };
 
   // Logout
-  function handleLogout() {
+  const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
-  }
+  };
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-100 to-indigo-200">
@@ -75,94 +106,97 @@ export default function Dashboard() {
           </h1>
           <button
             onClick={handleLogout}
-            className="px-6 py-2 rounded-lg border border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition-all"
-          >
+            className="px-5 py-2 rounded-lg border border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition">
             Logout
           </button>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-6 py-10">
 
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 mb-10">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Upload New Image</h2>
-          <div className="flex flex-col sm:flex-row gap-4">
+        <div className="bg-white rounded-2xl shadow-xl border p-8 mb-12">
+          <h2 className="text-2xl font-semibold mb-6">Upload Image</h2>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            
             <input
+              ref={fileInputRef}
               type="file"
               accept="image/*"
-              onChange={(e) => setFile(e.target.files[0])}
-              className="flex-1 px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-600"
+              className="hidden"
+              onChange={(e) => handleFileSelect(e.target.files[0])}
             />
+
+            <button
+              type="button"
+              onClick={() => fileInputRef.current.click()}
+              className="px-6 py-3 rounded-lg border border-indigo-600 text-indigo-600 hover:bg-indigo-50 font-medium"
+            >
+              Choose Image
+            </button>
+
+            {file && (
+              <span className="text-sm text-slate-600 truncate max-w-xs">
+                {file.name}
+              </span>
+            )}
+
             <button
               onClick={handleUpload}
               disabled={!file || uploading}
-              className="px-6 py-2.5 rounded-lg font-medium bg-linear-to-r from-indigo-600 to-violet-600 
+              className="px-6 py-3 rounded-lg font-medium bg-linear-to-r from-indigo-600 to-violet-600 
                          text-white shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 
                          hover:scale-105 transition-all duration-200"
             >
               {uploading ? "Uploading..." : "Upload"}
             </button>
           </div>
-        </div>
 
-        <div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">
-            My Gallery
-            <span className="text-slate-500 font-normal text-lg ml-2">({images.length})</span>
-          </h2>
-
-          {loading ? (
-            <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
-              <p className="text-slate-500 text-lg">Loading...</p>
+          {/* Preview */}
+          {preview && (
+            <div className="mt-6">
+              <p className="text-lg text-slate-500 mb-2">Preview</p>
+              <img
+                src={preview}
+                alt="preview"
+                className="max-h-60 rounded-xl border shadow"
+              />
             </div>
-          ) : images.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
-              <p className="text-slate-500 text-lg">No images yet. Upload your first image above.</p>
-            </div>
-          ) : (
-            <div className="masonry">
-              {images.map((img) => (
-                <div
-                  key={img._id}
-                  className="masonry-item relative group overflow-hidden rounded-2xl bg-white border border-indigo-200 shadow-md hover:shadow-2xl hover:shadow-indigo-300 transition-all duration-300"
-                >
-                  <img
-                    src={getImageUrl(img.imageUrl)}
-                    alt="uploaded"
-                    className="w-full rounded-2xl group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                    onLoad={(e) => {
-                      const { naturalWidth, naturalHeight } = e.currentTarget;
-                      setImageDims((prev) => ({
-                        ...prev,
-                        [img._id]: { w: naturalWidth, h: naturalHeight },
-                      }));
-                    }}
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-
-                  {imageDims[img._id] && (
-                    <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
-                      {imageDims[img._id].w}×{imageDims[img._id].h}
-                    </div>
-                  )}
-
-                  <button
-                    onClick={() => handleDelete(img._id)}
-                    className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 bg-red-600 text-white text-xs px-3 py-1 rounded-full hover:bg-red-700 transition"
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
-            </div>
-
           )}
         </div>
-      </div>
+
+        {/* Gallery */}
+        {loading ? (
+          <p className="text-center text-slate-600">Loading...</p>
+        ) : images.length === 0 ? (
+          <p className="text-center text-slate-600">
+            No images uploaded yet.
+          </p>
+        ) : (
+          <div className="masonry">
+            {images.map((img) => (
+              <div
+                key={img._id}
+                className="masonry-item relative group overflow-hidden rounded-2xl bg-white border border-indigo-300 shadow-lg hover:shadow-2xl hover:shadow-indigo-300 transition-all duration-300"
+              >
+                <img
+                  src={img.imageUrl}
+                  alt="uploaded"
+                  className="w-full rounded-2xl group-hover:scale-105 transition-transform"
+                  loading="lazy"
+                />
+
+                <button
+                  onClick={() => handleDelete(img._id)}
+                  className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 bg-red-600 text-white text-xs hover:bg-red-700 px-3 py-1 rounded-full transition"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   );
 }
-

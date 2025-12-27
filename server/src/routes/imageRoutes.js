@@ -1,22 +1,22 @@
 import express from "express";
-import auth from "../middlewares/authMiddleware.js";
-import upload from "../middlewares/uploadMiddleware.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
 import {
+  uploadImage,
+  deleteImage,
   getRandomImages,
   getImagesByUsername,
-  getMyImages,
-  uploadImage,
-  deleteImage
+  getMyImages, 
 } from "../controllers/imageController.js";
 
 const router = express.Router();
 
-router.get("/random", getRandomImages); // GET RANDOM IMAGES
-router.get("/user/:username", getImagesByUsername); // GET IMAGES BY USERNAME
-router.get("/my", auth, getMyImages); // GET MY IMAGES (authenticated user's gallery)
-// UPLOAD IMAGE
-router.post("/upload", auth, upload.single("image"), uploadImage);
-// DELETE IMAGE
-router.delete("/:id", auth, deleteImage);
+// public routes
+router.get("/random", getRandomImages);
+router.get("/user/:username", getImagesByUsername);
+
+// private routes
+router.get("/my", authMiddleware, getMyImages); // ✅ FIX
+router.post("/upload", authMiddleware, uploadImage);
+router.delete("/:id", authMiddleware, deleteImage);
 
 export default router;

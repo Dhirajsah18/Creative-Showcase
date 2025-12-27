@@ -16,7 +16,10 @@ export default function Login() {
         localStorage.setItem("token", res.data.token);
         navigate("/dashboard");
       })
-      .catch(() => alert("Invalid credentials"));
+      .catch((error) => {
+        const message = error.response?.data?.message || "Invalid credentials";
+        alert(message);
+      });
   };
 
   return (
