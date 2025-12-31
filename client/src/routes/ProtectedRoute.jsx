@@ -5,7 +5,7 @@ export default function ProtectedRoute({ children }) {
 
   // If no token, redirect to login
   if (!token) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;

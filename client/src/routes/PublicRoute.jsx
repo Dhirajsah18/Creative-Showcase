@@ -5,7 +5,7 @@ export default function PublicRoute({ children }) {
 
   // If token exists, redirect to dashboard
   if (token) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;

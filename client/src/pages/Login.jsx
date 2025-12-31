@@ -1,94 +1,95 @@
 import { useState } from "react";
-import api from "../utils/api";
 import { useNavigate, Link } from "react-router-dom";
+import { loginUser, saveAuth } from "../services/authservices.js";
+import MainLayout from "../layout/MainLayout";
+import Navbar from "../components/Navbar";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Handle login
-  
-  const login = (e) => {
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    api.post("/auth/login", { email, password })
-      .then(res => {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("username", res.data.username); 
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        const message = error.response?.data?.message || "Invalid credentials";
-        alert(message);
-      });
+    if (!form.email || !form.password) return;
+
+    try {
+      setLoading(true);
+      const data = await loginUser(form);
+      saveAuth(data);
+      navigate("/dashboard");
+    } catch (err) {
+      alert(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-200 to-indigo-300 flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-block">
-            <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent mb-2">
-              Creative Showcase
+    <MainLayout>
+      <Navbar />
+
+      {/* Page background */}
+      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center
+                      bg-linear-to-br from-slate-100 via-blue-200 to-indigo-300 px-4">
+
+        {/* Card */}
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-extrabold bg-linear-to-r from-indigo-600 to-violet-600
+                           bg-clip-text text-transparent">
+              Login
             </h1>
-          </Link>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">
-            Welcome Back
-          </h2>
-          <p className="text-slate-600">
-            Login to your creative space
-          </p>
-        </div>
+            <p className="text-slate-500 mt-2">
+              continue sharing your creativity
+            </p>
+          </div>
 
-        {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-lg shadow-indigo-500/30 border border-indigo-800 p-8">
-          <form onSubmit={login} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-              />
-            </div>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <input
+              name="email"
+              type="email"
+              placeholder="Email address"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none
+                          transition"/>
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500
+               focus:outline-none transition" />
 
             <button
               type="submit"
-              className="w-full py-3 rounded-lg font-medium bg-linear-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all duration-200"
-            >
-              Login
+              disabled={loading}
+              className="w-full py-3 rounded-xl font-semibold text-white bg-linear-to-r from-indigo-600 to-violet-600
+                shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all
+                disabled:opacity-60">
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 
           {/* Footer */}
-          <div className="mt-6 text-center text-sm text-slate-600">
-            Don't have an account?{" "}
-            <Link to="/signup" className="font-medium text-indigo-600 hover:text-violet-600 transition-colors">
+          <p className="text-center text-sm mt-6 text-slate-600">
+            Don’t have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-indigo-600 hover:underline">
               Sign up
             </Link>
-          </div>
+          </p>
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }

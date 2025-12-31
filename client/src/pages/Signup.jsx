@@ -1,110 +1,127 @@
 import { useState } from "react";
-import api from "../utils/api";
 import { useNavigate, Link } from "react-router-dom";
+import { signupUser, saveAuth } from "../services/authservices.js";
+import MainLayout from "../layout/MainLayout";
+import Navbar from "../components/Navbar";
 
-// Signup 
 export default function Signup() {
   const [form, setForm] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
   });
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const submit = (e) => {
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    api.post("/auth/register", form)
-      .then(() => {
-        alert("Account created successfully! Please login.");
-        navigate("/login");
-      })
-      .catch((error) => {
-        const message = error.response?.data?.message || "Signup failed";
-        alert(message);
-      });
+    if (!form.username || !form.email || !form.password) return;
+
+    try {
+      setLoading(true);
+      const data = await signupUser(form);
+      saveAuth(data);
+      navigate("/dashboard");
+    } catch (err) {
+      alert(err.response?.data?.message || "Signup failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-200 to-indigo-300 flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-block">
-            <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent mb-2">
-              Creative Showcase
+    <MainLayout>
+      <Navbar />
+
+      {/* Page background */}
+      <div
+        className="min-h-[calc(100vh-80px)] flex items-center justify-center
+                   bg-linear-to-br from-slate-100 via-blue-200 to-indigo-300 px-4"
+      >
+        {/* Card */}
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1
+              className="text-3xl font-extrabold
+                         bg-linear-to-r from-indigo-600 to-violet-600
+                         bg-clip-text text-transparent"
+            >
+              Create Account
             </h1>
-          </Link>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">
-            Create Account
-          </h2>
-          <p className="text-slate-600">
-            Start showcasing your creativity
-          </p>
-        </div>
+            <p className="text-slate-500 mt-2">
+              Join and start sharing creativity
+            </p>
+          </div>
 
-        {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-lg shadow-indigo-500/30 border border-indigo-800 p-8">
-          <form onSubmit={submit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Username
-              </label>
-              <input
-                type="text"
-                placeholder="Choose a username"
-                value={form.username}
-                onChange={(e) => setForm({ ...form, username: e.target.value })}
-                required
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-              />
-            </div>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <input
+              name="username"
+              placeholder="Username"
+              value={form.username}
+              onChange={handleChange}
+              className="
+                w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none
+                transition"
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-              />
-            </div>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email address"
+              value={form.email}
+              onChange={handleChange}
+              className="
+                w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none
+                transition"
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                placeholder="Create a password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                required
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-              />
-            </div>
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              className="
+                w-full px-4 py-3 rounded-xl border-2 border-slate-200
+                focus:border-indigo-500 focus:outline-none
+                transition
+              "
+            />
 
             <button
               type="submit"
-              className="w-full py-3 rounded-lg font-medium bg-linear-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all duration-200"
+              disabled={loading}
+              className="
+                w-full py-3 rounded-xl font-semibold text-white
+                bg-linear-to-r from-indigo-600 to-violet-600
+                shadow-lg shadow-indigo-500/30
+                hover:shadow-xl hover:shadow-indigo-500/40
+                hover:scale-[1.02] transition-all
+                disabled:opacity-60
+              "
             >
-              Create Account
+              {loading ? "Creating account..." : "Sign Up"}
             </button>
           </form>
 
           {/* Footer */}
-          <div className="mt-6 text-center text-sm text-slate-600">
+          <p className="text-center text-sm mt-6 text-slate-600">
             Already have an account?{" "}
-            <Link to="/login" className="font-medium text-indigo-600 hover:text-violet-600 transition-colors">
+            <Link
+              to="/login"
+              className="font-medium text-indigo-600 hover:underline"
+            >
               Login
             </Link>
-          </div>
+          </p>
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }

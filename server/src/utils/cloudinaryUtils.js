@@ -1,17 +1,15 @@
-import cloudinary from "../config/cloudinary.js";
+import axios from "axios";
 
-// upload base64 image
-export const uploadOnCloudinary = async (base64Image) => {
-  if (!base64Image) return null;
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+});
 
-  return await cloudinary.uploader.upload(base64Image, {
-    folder: "creative-showcase",
-    resource_type: "image",
-  });
-};
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
-// delete image
-export const deleteFromCloudinary = async (publicId) => {
-  if (!publicId) return null;
-  return await cloudinary.uploader.destroy(publicId);
-};
+export default api;
