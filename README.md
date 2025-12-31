@@ -50,11 +50,11 @@ It supports **public user profiles**, **random image discovery**, and a **person
 ## 📸 Screenshots
 
 ### Landing Page
-![Landing_page](https://github.com/user-attachments/assets/a92a85fe-173d-4cd3-95e4-f5f4c360606e)
+![Landing_page](https://github.com/user-attachments/assets/1c50ddb7-00b1-43f6-b6f6-26c27c344a51)
 
 
 ### Dashboard
-![Dashboard](https://github.com/user-attachments/assets/ba3d4ae8-3ecf-445c-83d7-b1fcc9e03278)
+![Dashboard](https://github.com/user-attachments/assets/f86992cf-ff30-41d9-acb6-d7cb089e1047)
 
 ---
 
